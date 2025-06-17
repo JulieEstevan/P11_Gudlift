@@ -31,9 +31,25 @@ def index():
 
 @app.route('/show_summary', methods=['POST'])
 def show_summary():
-    """Render the summary page after club selection."""
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html', club=club, competitions=competitions)
+    """Render the summary page after enter club email."""
+    email = request.form['email']
+    club = [c for c in clubs if c['email'] == email]
+    if club:
+        club = club[0]  # Get the first matching club
+        return render_template('welcome.html', club=club, comp=competitions)
+    elif not email:
+        flash("Please enter your email address")
+        return render_template('index.html')
+    elif '@' not in email or '.' not in email.split('@')[-1]:
+        flash("Please enter a valid email address")
+        return render_template('index.html')
+    elif not club:
+        flash("Email address not found in our records")
+        return render_template('index.html')
+    else:
+        flash("Something went wrong-please try again")
+        return render_template('index.html')
+    
 
 
 @app.route('/book/<competition>/<club>')
