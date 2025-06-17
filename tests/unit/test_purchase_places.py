@@ -27,7 +27,7 @@ def test_purchase_more_places_than_club_points_available(client):
     response = client.post('/purchase_places', data={
         'competition': 'Summer Showdown',
         'club': 'Simply Lift',
-        'places': 20  # Assuming this exceeds club points
+        'places': 10  # Assuming this exceeds club points
     })
     assert response.status_code == 200
     assert b'Not enough points available' in response.data
@@ -43,4 +43,15 @@ def test_purchase_more_than_12_places(client):
     })
     assert response.status_code == 200
     assert b'You cannot book more than 12 places' in response.data
+    assert b'Places available: 20' in response.data  # Assuming this is the number of places available
+
+def test_purchase_more_places_than_available(client):
+    """Test purchasing more places than available."""
+    response = client.post('/purchase_places', data={
+        'competition': 'Summer Showdown',
+        'club': 'Simply Lift',
+        'places': 100  # Assuming this exceeds the available places
+    })
+    assert response.status_code == 200
+    assert b'You cannot book more places than available' in response.data
     assert b'Places available: 20' in response.data  # Assuming this is the number of places available
