@@ -55,24 +55,29 @@ def show_summary():
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
     """Render the booking page for a specific competition and club."""
-    found_club = [c for c in clubs if c['name'] == club][0]
-    found_competition = [c for c in competitions if c['name'] == competition][0]
+    found_club = [c for c in clubs if c['name'] == club]
+    found_competition = [c for c in competitions if c['name'] == competition]
     if found_club and found_competition:
-        return render_template('booking.html', club=found_club, competition=found_competition)
+        found_club = found_club[0]
+        found_competition = found_competition[0]
+        return render_template('booking.html', club=found_club, comp=found_competition)
     else:
         flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=club, comp=competitions)
 
 
 @app.route('/purchase_places', methods=['POST'])
 def purchase_places():
     """Handle the booking of places for a competition."""
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
+    competition = [c for c in competitions if c['name'] == request.form['competition']]
+    club = [c for c in clubs if c['name'] == request.form['club']]
     places_required = int(request.form['places'])
+    if places_required > int(club[0]['points']):
+        flash('Not enough points available')
+        return render_template('booking.html', club=club[0], comp=competition[0])
     competition['number_of_places'] = int(competition['number_of_places']) - places_required
     flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
+    return render_template('welcome.html', club=club, comp=competitions)
 
 
 # TODO: Add route for points display
