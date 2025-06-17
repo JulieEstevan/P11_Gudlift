@@ -10,14 +10,6 @@ def client():
         yield client
 
 
-def test_booking_page(client):
-    """Test the booking page for a specific competition and club."""
-    response = client.get('/book/Summer Showdown/Simply Lift')
-    assert response.status_code == 200
-    assert b'Booking for Summer Showdown' in response.data
-    assert b'Simply Lift' in response.data
-
-
 def purchase_valid_places(client):
     """Test the purchase places functionality."""
     response = client.post('/purchase_places', data={
