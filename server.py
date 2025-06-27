@@ -85,21 +85,22 @@ def book(competition, club):
 @app.route('/purchase_places', methods=['POST'])
 def purchase_places():
     """Handle the booking of places for a competition."""
-    competition = [c for c in competitions if c['name'] == request.form['competition']]
-    club = [c for c in clubs if c['name'] == request.form['club']]
+    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
+    club = [c for c in clubs if c['name'] == request.form['club']][0]
     places_required = int(request.form['places'])
-    number_of_places = int(competition[0]['number_of_places'])
+    number_of_places = int(competition['number_of_places'])
     if places_required > number_of_places:
         flash('You cannot book more places than available')
-        return (render_template('booking.html', club=club[0], comp=competition[0]), 400)
+        return (render_template('booking.html', club=club, comp=competition), 400)
     elif places_required > 12:
         flash('You cannot book more than 12 places')
-        return (render_template('booking.html', club=club[0], comp=competition[0]), 400)
-    elif places_required > int(club[0]['points']):
+        return (render_template('booking.html', club=club, comp=competition), 400)
+    elif places_required > int(club['points']):
         flash('Not enough points available')
-        return (render_template('booking.html', club=club[0], comp=competition[0]), 400)
+        return (render_template('booking.html', club=club, comp=competition), 400)
     elif places_required >= 1:
-        competition[0]['number_of_places'] = number_of_places - places_required
+        competition['number_of_places'] = int(competition['number_of_places']) - places_required
+        club['points'] = int(club['points']) - places_required
         flash('Great-booking complete!')
         return (render_template('welcome.html', club=club, comp=competitions, over=over_competitions), 200)
 
