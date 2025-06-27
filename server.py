@@ -48,20 +48,19 @@ def show_summary():
     club = [c for c in clubs if c['email'] == email]
     if club:
         club = club[0]  # Get the first matching club
-        return render_template('welcome.html', club=club, comp=competitions, over=over_competitions)
+        return (render_template('welcome.html', club=club, comp=competitions, over=over_competitions), 200)
     elif not email:
         flash("Please enter your email address")
-        return render_template('index.html')
+        return (render_template('index.html'), 400)
     elif '@' not in email or '.' not in email.split('@')[-1]:
         flash("Please enter a valid email address")
-        return render_template('index.html')
+        return (render_template('index.html'), 400)
     elif not club:
         flash("Email address not found in our records")
-        return render_template('index.html')
+        return (render_template('index.html'), 400)
     else:
         flash("Something went wrong-please try again")
-        return render_template('index.html')
-    
+        return (render_template('index.html'), 500)
 
 
 @app.route('/book/<competition>/<club>')
@@ -92,16 +91,17 @@ def purchase_places():
     number_of_places = int(competition[0]['number_of_places'])
     if places_required > number_of_places:
         flash('You cannot book more places than available')
-        return render_template('booking.html', club=club[0], comp=competition[0])
+        return (render_template('booking.html', club=club[0], comp=competition[0]), 400)
     elif places_required > 12:
         flash('You cannot book more than 12 places')
-        return render_template('booking.html', club=club[0], comp=competition[0])
+        return (render_template('booking.html', club=club[0], comp=competition[0]), 400)
     elif places_required > int(club[0]['points']):
         flash('Not enough points available')
-        return render_template('booking.html', club=club[0], comp=competition[0])
-    competition['number_of_places'] = int(competition['number_of_places']) - places_required
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, comp=competitions, over=over_competitions)
+        return (render_template('booking.html', club=club[0], comp=competition[0]), 400)
+    elif places_required >= 1:
+        competition[0]['number_of_places'] = number_of_places - places_required
+        flash('Great-booking complete!')
+        return (render_template('welcome.html', club=club, comp=competitions, over=over_competitions), 200)
 
 
 # TODO: Add route for points display
