@@ -1,12 +1,5 @@
-import pytest
-from server import app
+from tests.conftest import client
 
-@pytest.fixture
-def client():
-    """Create a test client for the Flask application."""
-    app.config['TESTING'] = True
-    with app.test_client() as client:
-        yield client
 
 def test_booking_page_valid(client):
     """Test the booking page for a specific competition and club."""
