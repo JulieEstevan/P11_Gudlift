@@ -78,5 +78,5 @@ Se rendre sur l'adresse [http://localhost:8089](http://localhost:8089) et entrer
 ### Rapports
 
 ![Pytest_report](screenshot/pytest.png)
-![Coverage_report](screenshot/coverage.png.png)
-![Locus_report](screenshot/locust.png.png)
+![Coverage_report](screenshot/coverage.png)
+![Locus_report](screenshot/locust.png)
