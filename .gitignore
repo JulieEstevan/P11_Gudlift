@@ -1,7 +1,4 @@
-bin
-include
-lib
-.Python
-.envrc
 __pycache__
+.pytest_cache
 .venv
+htmlcov
